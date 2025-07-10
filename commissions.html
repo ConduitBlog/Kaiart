@@ -134,7 +134,7 @@
     const usdDisplay = document.getElementById('usdPrice');
 
     function countSelectedColors() {
-      const presets = document.querySelectorAll('input[name="presetColor"]:checked').length;
+      const presets = document.querySelectorAll('input[name="presetColor[]"]:checked').length;
       const hexes = Array.from(document.querySelectorAll('input[name^="hex"]')).filter(input => input.value.trim() !== "").length;
       return presets + hexes;
     }
