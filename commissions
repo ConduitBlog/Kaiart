@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Kaiart</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <style>
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1.5rem;
+      background: #fff;
+      border-radius: 1rem;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+    }
+
+    form input[type="text"],
+    form input[type="email"],
+    form input[type="number"],
+    form select {
+      padding: 0.5rem 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    form input[type="checkbox"] {
+      margin-right: 0.5rem;
+    }
+
+    form label {
+      font-weight: bold;
+      text-align: left;
+    }
+
+    form button[type="submit"] {
+      background-color: var(--accent);
+      color: black;
+      padding: 0.6rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    form button[type="submit"]:hover {
+      background-color: #ffdd99;
+    }
+
+    #colorOptions input[type="text"] {
+      margin: 0.2rem;
+      width: 100px;
+    }
+
+    .price-display {
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Kaiart</h1>
+    <p>Divine abstraction in every stroke.</p>
+    <nav>
+      <a href="changelog.html">Changelog</a>
+      <a href="index.html">Home</a>
+    </nav>
+  </header>
+
+  <section style="max-width: 700px; margin: 3rem auto; text-align: center;">
+    <h2 style="font-family: 'Playfair Display', serif; color: var(--primary); margin-bottom: 1rem;">Commission Form</h2>
+    <h3 style="font-family: 'Playfair Display', serif; color: var(--primary); margin-bottom: 1rem;">Get a custom piece!</h3>
+	  <h4 style="font-family: 'Playfair Display', serif; color: var(--primary); margin-bottom: 1rem;"><strong>Note that it might take a while for me to notice the email, if you have not recieved a message about your Comission status (In queue, WIP, complete, etc) within 48 hours after order, message me on Discord: <em>print_glitxh</em></strong></h4>
+
+    <form id="customForm" action="https://formsubmit.co/sloanackers21@gmail.com" method="POST">
+      <!-- Name and Email for FormSubmit -->
+      <label for="name">Your Name:</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="email">Your Email:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="discord">Your Discord Username:</label>
+      <input type="text" id="discord" name="discord" required>
+
+      <label for="size">Canvas Size:</label>
+      <select id="size" name="size">
+        <option value="1">500x500 px ~ CA$1.00</option>
+        <option value="2">1000x1000 px ~ CA$2.00</option>
+      </select>
+
+      <label>Choose up to 5 Colors (CA$0.25 each):</label>
+      <div id="colorOptions">
+        <label><input type="checkbox" name="presetColor[]" value="#FF0000">Red</label>
+        <label><input type="checkbox" name="presetColor[]" value="#00FF00">Green</label>
+        <label><input type="checkbox" name="presetColor[]" value="#0000FF">Blue</label>
+        <label><input type="checkbox" name="presetColor[]" value="#FFFF00">Yellow</label>
+        <label><input type="checkbox" name="presetColor[]" value="#FFA500">Orange</label>
+        <label><input type="checkbox" name="presetColor[]" value="#800080">Purple</label>
+        <label><input type="checkbox" name="presetColor[]" value="#000000">Black</label>
+        <label><input type="checkbox" name="presetColor[]" value="#FFFFFF">White</label>
+        <label><input type="checkbox" name="presetColor[]" value="#808080">Gray</label>
+        <label><input type="checkbox" name="presetColor[]" value="#00FFFF">Cyan</label>
+
+        <label style="margin-top: 1rem;">Custom HEX Codes:</label><br>
+        <input type="text" name="hex1" maxlength="7" placeholder="#ABCDEF">
+        <input type="text" name="hex2" maxlength="7" placeholder="#123456">
+        <input type="text" name="hex3" maxlength="7" placeholder="#654321">
+        <input type="text" name="hex4" maxlength="7" placeholder="#FF69B4">
+        <input type="text" name="hex5" maxlength="7" placeholder="#4B0082">
+      </div>
+
+      <label for="quantity">Quantity:</label>
+      <input type="number" id="quantity" name="quantity" min="1" value="1">
+
+      <p class="price-display">
+        Estimated Price: <span id="cadPrice">$0.00 CAD</span> / <span id="usdPrice">$0.00 USD</span>
+      </p>
+
+      <button type="submit">Send Commission Request</button>
+    </form>
+  </section>
+
+  <script>
+    const form = document.getElementById('customForm');
+    const size = document.getElementById('size');
+    const quantity = document.getElementById('quantity');
+    const cadDisplay = document.getElementById('cadPrice');
+    const usdDisplay = document.getElementById('usdPrice');
+
+    function countSelectedColors() {
+      const presets = document.querySelectorAll('input[name="presetColor"]:checked').length;
+      const hexes = Array.from(document.querySelectorAll('input[name^="hex"]')).filter(input => input.value.trim() !== "").length;
+      return presets + hexes;
+    }
+
+    function updatePrice() {
+      const sizePrice = parseFloat(size.value);
+      const colorCount = countSelectedColors();
+      const colorPrice = colorCount * 0.25;
+      const qty = parseInt(quantity.value) || 1;
+      const totalCAD = ((sizePrice + colorPrice) * qty).toFixed(2);
+      const totalUSD = (totalCAD * 0.74).toFixed(2); // Conversion rate
+
+      cadDisplay.textContent = `$${totalCAD} CAD`;
+      usdDisplay.textContent = `$${totalUSD} USD`;
+    }
+
+    form.addEventListener('input', updatePrice);
+    updatePrice();
+  </script>
+</body>
+</html>
