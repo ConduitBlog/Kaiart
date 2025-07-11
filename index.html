@@ -280,5 +280,22 @@
     <p>Email: <a href="mailto:maskedinsomniqc@gmail.com">maskedinsomniqc@gmail.com</a></p>
     <p>Or DM me on Discord (MORE ACTIVE): <strong>@print_glitxh</strong></p>
   </section>
+
+<script>
+  function toggleDarkMode() {
+    const body = document.body;
+    body.classList.toggle("dark-mode");
+    localStorage.setItem("theme", body.classList.contains("dark-mode") ? "dark" : "light");
+  }
+
+  // On page load, apply the saved theme
+  window.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      document.body.classList.add("dark-mode");
+    }
+  });
+</script>
+	
 </body>
 </html>
